@@ -33,7 +33,7 @@ module RestfulAcl
           when "update":  object.is_updatable_by(current_user)
           when "new":     klass.is_creatable_by(current_user)
           when "create":  klass.is_creatable_by(current_user)
-          when "destroy": klass.is_deletable_by(current_user)
+          when "destroy": object.is_deletable_by(current_user)
         end   
 
         permission_denied unless access_granted
