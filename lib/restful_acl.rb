@@ -10,14 +10,6 @@ module RestfulAcl
   module ClassMethods
     
     def has_permission?
-      public_urls = %w{/login /logout /session /denied /error}
-      check_access unless public_urls.include?(request.request_uri)
-    end
-
-
-    protected
-    
-    def check_access
       begin
         # Load the Model based on the controller name passed in
         klass = Object.const_get(params[:controller].classify)
