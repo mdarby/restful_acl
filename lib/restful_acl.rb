@@ -9,9 +9,9 @@ module RestfulAcl
     
     def has_permission?
       begin
-        # Load the Model based on the controller name passed in
-        klass = params[:controller].classify.constantize
-      
+        # Load the Model based on the controller name
+        klass = self.controller_name.classify.constantize
+
         # Load the object requested if the param[:id] exists
         object = klass.find(params[:id]) unless params[:id].blank?
       
