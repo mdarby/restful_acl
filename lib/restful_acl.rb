@@ -6,15 +6,17 @@ module RestfulAcl
   end
   
   module ClassMethods
-    
+
     def has_permission?
+      return true if current_user.respond_to?("is_admin?") && current_user.is_admin? # Admins rule.
+      
       begin
         # Load the Model based on the controller name
         klass = self.controller_name.classify.constantize
 
         # Load the object requested if the param[:id] exists
         object = klass.find(params[:id]) unless params[:id].blank?
-      
+        
         # Let's let the Model decide what is acceptable
         permission_denied unless case params[:action] 
           when "index"          then klass.is_readable_by(current_user)
