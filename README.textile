@@ -1,0 +1,147 @@
+h2. RESTful_ACL
+
+A Ruby on Rails plugin that provides fine grained access control to RESTful resources in a Ruby on Rails 2.0+ project.
+
+h3. What it does
+
+RESTful_ACL is a simple Access Control Layer for Ruby on Rails. It restricts access on a fine-grained level to any RESTful MVC stack. While the ACL structure and engine are provided by this plugin, the implementation is fully up to the user. Every application is different and everyone likes to setup their User / Account / Role resources differently; this plugin will allow you to do your thing and keep that thing locked down.
+
+h3. Requirements
+
+RESTful_ACL requires the super amazing "RESTful_Authentication":http://weblog.techno-weenie.net/2006/8/1/restful-authentication-plugin plugin.
+
+h3. Tutorial
+
+"map7":http://railsforum.com/profile.php?id=7662 was gracious enough to create a step-by-step example project which walks you through setting up RESTful_Authentication and RESTful_ACL: [[RESTful_Authentication_example]]
+
+h3. How to Install
+
+<pre>sudo gem install mdarby-restful_acl</pre>
+
+And add the gem to your environment.rb file as thus:
+<pre>
+# In environment.rb:
+config.gem "mdarby-restful_acl", :lib => 'restful_acl'  
+</pre>
+
+h3. How to Use
+
+RESTful_ACL requires two named routes: "error" and "denied". You can create these routes by adding the following to your routes.rb file (note that you will have to restart your app before these are recognized):
+<pre>
+map.error '/error', :controller => 'some_controller', :action => 'error_action'
+map.denied '/denied', :controller => 'some_controller', :action => 'denied_action'
+</pre>
+
+Enter the below line into any controller that you'd like to restrict access to (or application.rb for your entire app).
+<pre>before_filter :has_permission?</pre>
+
+Define the following four methods in the model of every resource you'd like to restrict access to:
+<pre>
+def is_updatable_by(user)
+
+end
+
+def is_deletable_by(user)
+
+end
+
+def self.is_readable_by(user, object = nil)
+
+end
+
+def self.is_creatable_by(user)
+
+end
+</pre>
+
+The four CRUD methods can contain anything you'd like so long as they return a boolean true or false. This allows you to define your User's roles any way you wish. I normally use something along the lines of:
+
+<pre>
+  belongs_to :author, :foreign_key => 'created_by_id', :class_name => 'User'
+
+  def is_updatable_by(user)
+    user.eql?(author)
+  end
+
+  def is_deletable_by(user)
+    user.eql?(author)
+  end
+
+  def self.is_readable_by(user, object = nil)
+    true
+  end
+
+  def self.is_creatable_by(user)
+    user != nil #Ensure the user is logged in
+  end
+</pre>
+
+If you want to make an action public in an otherwise protected controller, you can do:
+<pre>before_filter :has_permission?, :except => :some_public_action</pre>
+
+There are four view helpers also included in RESTful_ACL: "creatable", "readable", "updatable", "deletable".
+This enables you to do nifty things like checking permissions in your views:
+<pre>
+<%= link_to 'Edit User', edit_user_url(@user) if updatable %>
+<%= link_to 'Create User', new_user_url if creatable %>
+<%= link_to 'View All Users', users_url if readable %>
+<%= link_to 'View User', user_url(@user) if readable(@user) %>
+<%= link_to 'Delete User', user_url(@user) if deletable %>
+</pre>
+
+h3. Admins RULE!
+
+As of 2008-07-22, RESTful_ACL grants global access to all actions to site administrators. To enable this, make sure that your User model defines an "is_admin?" method *and/or* an 'is_admin' attribute. If the current_user.is_admin? returns true, access will be granted automatically.
+
+h3. How to Test
+
+I normally do something along these lines in RSpec:
+<pre>
+before(:each) do
+  @page = Page.new
+
+  @author = mock_model(User)
+  @page.stub!(:author).and_return(@author)
+
+  @user = mock_model(User)
+end
+
+it "should be modifiable by an Admin or the author" do
+  @page.is_updatable_by(@author).should be_true
+  @page.is_updatable_by(@user).should be_false
+end
+
+it "should be deletable by the author" do
+  @page.is_deletable_by(@author).should be_true
+  @page.is_deletable_by(@user).should be_false
+end
+
+it "should be readable by anyone" do
+  Page.is_readable_by(@author, @time_card).should be_true
+  Page.is_readable_by(@user, @time_card).should be_true
+end
+
+it "should be creatable by everyone" do
+  Page.is_creatable_by(@admin).should be_true
+  Page.is_creatable_by(@user).should be_true
+end    
+</pre>
+
+h3. Caveats
+
+RESTful_ACL doesn't work with nested singleton resources. Wha? Yeah. Those are things in routes.rb like:
+
+<pre>
+# Note the singular forms in 'user.resource :profile'
+map.resources :users do |user|
+  user.resource :profile
+end
+</pre>
+
+In these situations I normally skip permission checking altogether as a Profile will always be mapped to the currently logged in User, regardless of the params[:user_id] passed in. You don't trust those either right? Good.
+
+h3. About the Author
+
+My name is Matt Darby. I'm a 28 year old professional Web Developer and IT Manager. I am the IT Manager and Lead Web Developer at "Dynamix Engineering":http://dynamix-ltd.com and recently earned a Master's Degree in Computer Science from "Franklin University":http://franklin.edu in Columbus, OH.
+
+Feel free to check out my "blog":http://blog.matt-darby.com or to "recommend me":http://www.workingwithrails.com/recommendation/new/person/10908-matt-darby
