@@ -8,5 +8,5 @@ Gem::Specification.new do |s|
   s.description = "A Rails gem that provides fine grained access control to RESTful resources in a Rails 2.0+ project."
   s.has_rdoc = false
   s.authors  = ["Matt Darby"]
-  s.files    = ["MIT-LICENSE", "README", "Rakefile", "init.rb", "install.rb", "lib/restful_acl.rb", "lib/restful_acl_helper.rb", "tasks/restful_acl_tasks.rake", "uninstall.rb"]
+  s.files    = ["MIT-LICENSE", "README", "Rakefile", "init.rb", "lib/restful_acl.rb", "lib/restful_acl_helper.rb", "rails/init.rb", "tasks/restful_acl_tasks.rake", "uninstall.rb"]
 end
