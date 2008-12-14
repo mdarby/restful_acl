@@ -1,3 +1,0 @@
-RESTful_ACL is a simple Access Control Layer for Ruby on Rails. It restricts access on a fine-grained level to any RESTful MVC stack. While the ACL structure and engine are provided by this plugin, the implementation is fully up to the user. Every application is different and everyone likes to setup their User / Account / Role resources differently; this plugin will allow you to do your thing and keep that thing locked down.
-
-Please see the wiki (http://github.com/mdarby/restful_acl/wikis/) for more information.
