@@ -1,9 +1,9 @@
 module RestfulAclHelper
 
-  def creatable
+  def creatable(parent_object = nil)
     return true if admin_enabled
     
-    klass.is_creatable_by(current_user)
+    klass.is_creatable_by(current_user, parent_object)
   end
   alias_method :createable, :creatable
   

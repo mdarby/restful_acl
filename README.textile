@@ -49,7 +49,7 @@ def self.is_readable_by(user, object = nil)
 
 end
 
-def self.is_creatable_by(user)
+def self.is_creatable_by(user, parent_object = nil)
 
 end
 </pre>
@@ -71,8 +71,11 @@ The four CRUD methods can contain anything you'd like so long as they return a b
     true
   end
 
-  def self.is_creatable_by(user)
-    user != nil #Ensure the user is logged in
+  def self.is_creatable_by(user, parent_object = nil)
+    # The parent_object param is automagically set to the 
+    # the 'parent' of a nested routing relationship.
+    
+    user.accounts.include?(parent_object)
   end
 </pre>
 
@@ -84,6 +87,7 @@ This enables you to do nifty things like checking permissions in your views:
 <pre>
 <%= link_to 'Edit User', edit_user_url(@user) if updatable %>
 <%= link_to 'Create User', new_user_url if creatable %>
+<%= link_to 'Create Issue', new_user_url if creatable(@account) %>
 <%= link_to 'View All Users', users_url if readable %>
 <%= link_to 'View User', user_url(@user) if readable(@user) %>
 <%= link_to 'Delete User', user_url(@user) if deletable %>
@@ -92,6 +96,19 @@ This enables you to do nifty things like checking permissions in your views:
 h3. Admins RULE!
 
 As of 2008-07-22, RESTful_ACL grants global access to all actions to site administrators. To enable this, make sure that your User model defines an "is_admin?" method *and/or* an 'is_admin' attribute. If the current_user.is_admin? returns true, access will be granted automatically.
+
+h3. Checking with Mom
+
+As of v1.2, the is_creatable_by method requires two parameters, like so: <pre>def self.is_creatable_by(user, parent_object = nil)</pre>
+This enables you to use a 'parent' object in a nested resource relationship.
+
+Say that you have a User, and that user is assigned to many Projects. Further say that that User needs to create Foo under a particular Project.
+Now you can do something like this:
+
+<pre>#Foos_Controller
+def self.is_creatable_by(user, parent_object = nil)
+  user.projects.include?(parent_object)
+end</pre>
 
 h3. How to Test
 
