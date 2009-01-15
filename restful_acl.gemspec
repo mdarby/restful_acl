@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
     "Rakefile",
     "init.rb",
     "install.rb",
-    "lib/restful_acl.rb",
+    "lib/restful_acl_controller.rb",
     "lib/restful_acl_helper.rb",
     "lib/restful_acl_model.rb",
     "rails/init.rb",
