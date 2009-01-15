@@ -73,7 +73,7 @@ Define a parent resource (if one exists) by using the <b>my_mom</b> method, and 
   end
 </pre>
 
-H4. View Helpers
+h4. View Helpers
 
 There are five view helpers also included in RESTful_ACL: #indexable, #creatable, #readable, #updatable, and #deletable. These enable you to do nifty things like:
 <pre>
