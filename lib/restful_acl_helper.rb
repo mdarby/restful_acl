@@ -1,43 +1,53 @@
 module RestfulAclHelper
+  def indexable
+    return true if admin_enabled
+
+    parent = klass.mom rescue nil
+    klass.is_indexable_by(current_user, parent)
+  end
 
   def creatable
     return true if admin_enabled
-    
-    klass.is_creatable_by(current_user)
+
+    parent = klass.mom rescue nil
+    klass.is_creatable_by(current_user, parent)
   end
   alias_method :createable, :creatable
-  
-  
+
+
   def updatable(object)
     return true if admin_enabled
-    
-    object.is_updatable_by(current_user)
+
+    parent = object.get_mom rescue nil
+    object.is_updatable_by(current_user, parent)
   end
   alias_method :updateable, :updatable
-  
-  
+
+
   def deletable(object)
     return true if admin_enabled
-    
-    object.is_deletable_by(current_user)
+
+    parent = object.get_mom rescue nil
+    object.is_deletable_by(current_user, parent)
   end
   alias_method :deleteable, :deletable
-  
-  
-  def readable(object = nil)
+
+
+  def readable(object)
     return true if admin_enabled
-    
-    klass.is_readable_by(current_user, object)
-  end  
+
+    parent = object.get_mom rescue nil
+    object.is_readable_by(current_user, parent)
+  end
+
 
   private
-    
+
     def admin_enabled
       current_user.respond_to?("is_admin?") && current_user.is_admin?
     end
-    
+
     def klass
       params[:controller].classify.constantize
     end
-
 end
