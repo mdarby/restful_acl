@@ -1,4 +1,4 @@
-module RestfulAcl
+module RestfulAclController
 
   def self.included(base)
     base.extend(ClassMethods)
