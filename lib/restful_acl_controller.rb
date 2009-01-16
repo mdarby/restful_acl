@@ -19,6 +19,7 @@ module RestfulAclController
           object = klass.find(params[:id])
           parent = object.get_mom rescue nil
         else
+          # No object was requested, so we need to go to the URI to figure out the parent
           object = nil
           parent = get_parent_from_request_uri(klass) if klass.has_parent?
         end
@@ -33,6 +34,9 @@ module RestfulAclController
           else object.is_readable_by(current_user, parent)
         end
 
+      rescue NoMethodError => e
+        # Misconfiguration: A RESTful_ACL specific method is missing.
+        raise_error(klass, e)
       rescue
         # Failsafe: If any funny business is going on, log and redirect
         routing_error
@@ -40,6 +44,20 @@ module RestfulAclController
     end
 
     private
+
+      def get_method_from_error(error)
+        error.message.gsub('`', "'").split("'").at(1)
+      end
+
+      def raise_error(klass, error)
+        method = get_method_from_error(error)
+        message = (is_class_method?(method)) ? "#{klass}#self.#{method}" : "#{klass}##{method}"
+        raise NoMethodError, "[RESTful_ACL] #{message}(user, parent = nil) seems to be missing?"
+      end
+
+      def is_class_method?(method)
+        method =~ /(indexable|creatable)/
+      end
 
       def get_parent_from_request_uri(child_klass)
         parent_klass = child_klass.mom.to_s
@@ -54,14 +72,14 @@ module RestfulAclController
       end
 
       def permission_denied
-        logger.info("[ACL] Permission denied to %s at %s for %s" %
+        logger.info("[RESTful_ACL] Permission denied to %s at %s for %s" %
         [(logged_in? ? current_user.login : 'guest'), Time.now, request.request_uri])
 
         redirect_to denied_url
       end
 
       def routing_error
-        logger.info("[ACL] Routing error by %s at %s for %s" %
+        logger.info("[RESTful_ACL] Routing error by %s at %s for %s" %
         [(logged_in? ? current_user.login : 'guest'), Time.now, request.request_uri])
 
         redirect_to error_url
