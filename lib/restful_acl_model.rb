@@ -8,7 +8,7 @@ module RestfulAclModel
   module ClassMethods
     attr_accessor :mom
 
-    def my_mom(model)
+    def logical_parent(model)
       self.mom = model
       include RestfulAclModel::InstanceMethods
     end

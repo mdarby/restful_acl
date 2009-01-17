@@ -43,7 +43,7 @@ Define a parent resource (if one exists) by using the <b>my_mom</b> method, and 
 
 <pre>
   class Issue < ActiveRecord::Base
-    my_mom :some_model_name
+    logical_parent :some_model_name
     
     # This method checks permissions for the :index action
     def self.is_indexable_by(user, parent = nil)
@@ -90,7 +90,7 @@ Let's say that you have two resources: Project and Issue. A Project has many Iss
 
 <pre>
   class Issue < ActiveRecord::Base
-    my_mom :project
+    logical_parent :project
     
     belongs_to :author
     belongs_to :project
