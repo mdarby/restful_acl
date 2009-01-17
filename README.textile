@@ -39,7 +39,7 @@ Add this before_filter into any controller that you'd like to restrict access to
 
 h4. Models
 
-Define a parent resource (if one exists) by using the <b>my_mom</b> method, and define the following five methods in the model of every resource you'd like to restrict access to. The five methods can contain anything you'd like so long as they return a boolean true or false. This allows you to define your User's roles any way you wish. 
+Define a parent resource (if one exists) by using the <b>logical_parent</b> method, and define the following five methods in the model of every resource you'd like to restrict access to. The five methods can contain anything you'd like so long as they return a boolean true or false. This allows you to define your User's roles any way you wish. 
 
 <pre>
   class Issue < ActiveRecord::Base
