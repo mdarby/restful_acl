@@ -31,7 +31,7 @@ module RestfulAclController
           when "show"           then object.is_readable_by(current_user, parent)
           when "edit", "update" then object.is_updatable_by(current_user, parent)
           when "destroy"        then object.is_deletable_by(current_user, parent)
-          else object.is_readable_by(current_user, parent)
+          else check_non_restful_route(current_user, klass, object, parent)
         end
 
       rescue NoMethodError => e
@@ -44,6 +44,17 @@ module RestfulAclController
     end
 
     private
+
+      def check_non_restful_route(user, klass, object, parent)
+        if object
+          object.is_readable_by(user, parent)
+        elsif klass
+          klass.is_indexable_by(user, parent)
+        else
+          # If all else fails, deny access
+          false
+        end
+      end
 
       def get_method_from_error(error)
         error.message.gsub('`', "'").split("'").at(1)
