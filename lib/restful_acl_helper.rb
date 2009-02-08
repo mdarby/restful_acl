@@ -1,16 +1,12 @@
 module RestfulAclHelper
   def indexable
     return true if admin_enabled
-    
-    parent = parent_obj rescue nil
-    klass.is_indexable_by(current_user, parent)
+    klass.is_indexable_by(current_user, parent_obj)
   end
 
   def creatable
     return true if admin_enabled
-    
-    parent = parent_obj rescue nil
-    klass.is_creatable_by(current_user, parent)
+    klass.is_creatable_by(current_user, parent_obj)
   end
   alias_method :createable, :creatable
 
@@ -48,7 +44,7 @@ module RestfulAclHelper
     end
 
     def parent_obj
-      parent_klass.find(parent_id)
+      parent_klass.find(parent_id) rescue nil
     end
 
     def parent_klass
