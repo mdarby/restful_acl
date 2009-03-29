@@ -1,7 +1,3 @@
-h1. BIG CHANGES!
-
-RESTful_ACL has recently been overhauled (v2.0), please read this carefully for changes!
-
 h2. RESTful_ACL
 
 A Ruby on Rails plugin that provides fine grained access control through the MVC stack to RESTful resources in a Ruby on Rails 2.0+ application. Authorization is as simple as true or false.
@@ -16,30 +12,27 @@ RESTful_ACL requires the super amazing "RESTful_Authentication":https://github.c
 
 h3. How to Install
 
+Install the RESTful_ACL gem:
 <pre>sudo gem install mdarby-restful_acl -s http://gems.github.com</pre>
 
-And add the gem to your environment.rb file as thus:
-<pre>
-# In environment.rb:
-config.gem "mdarby-restful_acl", :lib => 'restful_acl_controller'
-</pre>
+Add the gem to your environment.rb file as thus:
+<pre>config.gem "mdarby-restful_acl", :lib => 'restful_acl_controller'</pre>
 
 RESTful_ACL requires two named routes: "error" and "denied". Add the following to your routes.rb file:
 <pre>
-map.error '/error', :controller => '<some_controller>', :action => '<error_action>'
-map.denied '/denied', :controller => '<some_controller>', :action => '<denied_action>'
+  map.error '/error', :controller => 'some_controller', :action => 'error_action'
+  map.denied '/denied', :controller => 'some_controller', :action => 'denied_action'
 </pre>
 
 h3. How to Use
 
 h4. Controllers
 
-Add this before_filter into any controller that you'd like to restrict access to (or application.rb for your entire app).
-<pre>before_filter :has_permission?</pre>
+Add @before_filter :has_permission?@ into any controller that you'd like to restrict access to (or application_controller.rb for your entire app).
 
 h4. Models
 
-Define a parent resource (if one exists) by using the <b>logical_parent</b> method, and define the following five methods in the model of every resource you'd like to restrict access to. The five methods can contain anything you'd like so long as they return a boolean true or false. This allows you to define your User's roles any way you wish. 
+Define a parent resource (if one exists) by using the @logical_parent@ method, and define the following five methods in the model of every resource you'd like to restrict access to. The five methods can contain anything you'd like so long as they return a boolean true or false. This allows you to define your User's roles any way you wish. 
 
 <pre>
   class Issue < ActiveRecord::Base
@@ -69,19 +62,18 @@ Define a parent resource (if one exists) by using the <b>logical_parent</b> meth
     def is_deletable_by(user, parent = nil)
 
     end
-    
   end
 </pre>
 
 h4. View Helpers
 
-There are five view helpers also included in RESTful_ACL: #indexable, #creatable, #readable, #updatable, and #deletable. These enable you to do nifty things like:
+There are five view helpers also included in RESTful_ACL: @#indexable@, @#creatable@, @#readable@, @#updatable@, and @#deletable@. These enable you to do nifty things like:
 <pre>
-<%= link_to ‘Foo Index’, foos_path if indexable %>
-<%= link_to 'Edit Foo', edit_foo_path(@foo) if updatable(@foo) %>
-<%= link_to 'Create Foo', new_foo_path if creatable %>
-<%= link_to 'View Foo', foo_path(@foo) if readable(@foo) %>
-<%= link_to 'Delete Foo', foo_path(@foo) if deletable(@foo), :method => :destroy %>
+  <%= link_to ‘Foo Index’, foos_path if indexable %>
+  <%= link_to 'Edit Foo', edit_foo_path(@foo) if updatable(@foo) %>
+  <%= link_to 'Create Foo', new_foo_path if creatable %>
+  <%= link_to 'View Foo', foo_path(@foo) if readable(@foo) %>
+  <%= link_to 'Delete Foo', foo_path(@foo) if deletable(@foo), :method => :destroy %>
 </pre>
 
 h3. Huh? Here's an example
@@ -119,55 +111,54 @@ Let's say that you have two resources: Project and Issue. A Project has many Iss
 
 h3. Admins RULE!
 
-RESTful_ACL grants global access to all actions to site administrators. To enable this, make sure that your User model defines an "is_admin?" method *and/or* an 'is_admin' attribute. If the current_user.is_admin? returns true, access will be granted automatically.
+RESTful_ACL grants global access to all actions to site administrators. To enable this, make sure that your User model defines an @is_admin?@ method *and/or* an @is_admin@ attribute. If the @current_user.is_admin?@ returns true, access will be granted automatically.
 
 h3. How to Test
 
 I normally do something along these lines in RSpec:
 <pre>
-describe "Issue" do
-  before do
-    @project = mock_model(Project)
-    @author  = mock_model(User, :projects => [@project])
+  describe "Issue" do
+    before do
+      @project = mock_model(Project)
+      @author  = mock_model(User, :projects => [@project])
     
-    @issue = Issue.factory_girl(:issue, :author => @author, :project => @project)
-  end
+      @issue = Issue.factory_girl(:issue, :author => @author, :project => @project)
+    end
 
-  it "should be modifiable by the author when the Project is active" do
-    @project.stub!(:is_active? => true)
-    @issue.is_updatable_by(@author, @project).should be_true
-  end
+    it "should be modifiable by the author when the Project is active" do
+      @project.stub!(:is_active? => true)
+      @issue.is_updatable_by(@author, @project).should be_true
+    end
 
-  it "should be deletable by the author" do
-    @issue.is_deletable_by(@author, @project).should be_true
-  end
+    it "should be deletable by the author" do
+      @issue.is_deletable_by(@author, @project).should be_true
+    end
 
-  it "should be readable by those assigned to the Project" do
-    Issue.is_readable_by(@author, @project).should be_true
-  end
+    it "should be readable by those assigned to the Project" do
+      Issue.is_readable_by(@author, @project).should be_true
+    end
 
-  it "should be creatable by those assigned to the Project" do
-    Issue.is_creatable_by(@author, @project).should be_true
+    it "should be creatable by those assigned to the Project" do
+      Issue.is_creatable_by(@author, @project).should be_true
+    end
   end
-end
 </pre>
 
 h3. Caveats
 
-Polymorphic resources (Comments, Attachments, etc) are a bit iffy for obvious reasons.
 RESTful_ACL doesn't work with nested singleton resources. Wha? Yeah. Those are things in routes.rb like:
 
 <pre>
-# Note the singular forms in 'user.resource :profile'
-map.resources :users do |user|
-  user.resource :profile
-end
+  # Note the singular forms in 'user.resource :profile'
+  map.resources :users do |user|
+    user.resource :profile
+  end
 </pre>
 
-In these situations I normally skip permission checking altogether as a Profile will always be mapped to the currently logged in User, regardless of the params[:user_id] passed in. You don't trust those either right? Good.
+In these situations I normally skip permission checking altogether as a Profile will always be mapped to the currently logged in User, regardless of the @params[:user_id]@ passed in. You don't trust those either right? Good.
 
 h3. About the Author
 
-My name is Matt Darby. I'm a 29 year old professional Web Developer and IT Manager. I am the IT Manager and Lead Web Developer at "Dynamix Engineering":http://dynamix-ltd.com and hold a MSCS from "Franklin University":http://franklin.edu in Columbus, OH.
+My name is "Matt Darby.":http://blog.matt-darby.com I’m an IT Manager and pro-web-dev at for "Dynamix Engineering":http://dynamix-ltd.com and hold a Master’s Degree in Computer Science from "Franklin University":http://www.franklin.edu in sunny "Columbus, OH.":http://en.wikipedia.org/wiki/Columbus,_Ohio
 
-Feel free to check out my "blog":http://blog.matt-darby.com or to "recommend me":http://www.workingwithrails.com/recommendation/new/person/10908-matt-darby
+Feel free to check out my "blog":http://blog.matt-darby.com or "recommend me":http://www.workingwithrails.com/person/10908-matt-darby
