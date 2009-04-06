@@ -157,6 +157,10 @@ RESTful_ACL doesn't work with nested singleton resources. Wha? Yeah. Those are t
 
 In these situations I normally skip permission checking altogether as a Profile will always be mapped to the currently logged in User, regardless of the @params[:user_id]@ passed in. You don't trust those either right? Good.
 
+h3. Help
+
+Add a ticket to "RESTful_ACL's Lighthouse Account":http://mdarby.lighthouseapp.com/projects/28698-restful_acl/overview
+
 h3. About the Author
 
 My name is "Matt Darby.":http://blog.matt-darby.com I’m an IT Manager and pro-web-dev at for "Dynamix Engineering":http://dynamix-ltd.com and hold a Master’s Degree in Computer Science from "Franklin University":http://www.franklin.edu in sunny "Columbus, OH.":http://en.wikipedia.org/wiki/Columbus,_Ohio
