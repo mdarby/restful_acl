@@ -40,7 +40,7 @@ module RestfulAclHelper
   private
 
     def klass
-      params[:controller].classify.constantize
+      params[:controller].classify.demodulize.constantize
     end
 
     def parent_obj
