@@ -12,7 +12,7 @@ module RestfulAclController
 
       begin
         # Load the Model based on the controller name
-        klass = self.controller_name.classify.constantize
+        klass = self.controller_name.classify.demodulize.constantize
 
         if params[:id]
           # Load the object and possible parent requested
