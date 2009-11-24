@@ -13,14 +13,15 @@ RESTful_ACL requires the super amazing "RESTful_Authentication":https://github.c
 h3. How to Install
 
 Install the RESTful_ACL gem:
-<pre>sudo gem install mdarby-restful_acl -s http://gems.github.com</pre>
+<pre>sudo gem install restful_acl -s http://gemcutter.org</pre>
 
 Add the gem to your environment.rb file as thus:
-<pre>config.gem "mdarby-restful_acl", :lib => 'restful_acl_controller'</pre>
+<pre>config.gem "restful_acl"</pre>
 
 RESTful_ACL requires two named routes: "error" and "denied". Add the following to your routes.rb file:
-<pre> map.error 'error', :controller => 'some_controller', :action => 'error_action'
-map.denied 'denied', :controller => 'some_controller', :action => 'denied_action'
+<pre>
+  map.error 'error', :controller => 'some_controller', :action => 'error_action'
+  map.denied 'denied', :controller => 'some_controller', :action => 'denied_action'
 </pre>
 
 h3. How to Use
@@ -73,7 +74,8 @@ RESTful_ACL 2.1+ supports singleton resources. Just pass @:singleton@ to the @lo
 h4. View Helpers
 
 There are five view helpers also included in RESTful_ACL: @#indexable@, @#creatable@, @#readable@, @#updatable@, and @#deletable@. These enable you to do nifty things like:
-<pre>= link_to ‘Foo Index’, foos_path if indexable
+<pre>
+= link_to ‘Foo Index’, foos_path if indexable
 = link_to 'Edit Foo', edit_foo_path(@foo) if updatable(@foo)
 = link_to 'Create Foo', new_foo_path if creatable
 = link_to 'View Foo', foo_path(@foo) if readable(@foo)
@@ -156,4 +158,4 @@ h3. About the Author
 
 My name is "Matt Darby.":http://blog.matt-darby.com I’m an IT Manager and pro-web-dev at for "Dynamix Engineering":http://dynamix-ltd.com and hold a Master’s Degree in Computer Science from "Franklin University":http://www.franklin.edu in sunny "Columbus, OH.":http://en.wikipedia.org/wiki/Columbus,_Ohio
 
-Feel free to check out my "blog":http://blog.matt-darby.com or "recommend me":http://www.workingwithrails.com/person/10908-matt-darby
+Feel free to check out my "site":http://matt-darby.com or "recommend me":http://www.workingwithrails.com/person/10908-matt-darby
