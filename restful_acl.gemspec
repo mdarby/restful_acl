@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{restful_acl}
-  s.version = "2.1.1"
+  s.version = "2.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matt Darby"]
@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
      "lib/controller.rb",
      "lib/helper.rb",
      "lib/model.rb",
+     "lib/restful_acl.rb",
      "rails/init.rb",
      "restful_acl.gemspec",
      "uninstall.rb"
