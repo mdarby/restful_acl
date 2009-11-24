@@ -5,8 +5,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "restful_acl"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = "A Ruby on Rails plugin that provides fine grained access control to RESTful resources."
+    gem.description = "A Ruby on Rails plugin that provides fine grained access control to RESTful resources."
     gem.email = "matt@matt-darby.com"
     gem.homepage = "http://github.com/mdarby/restful_acl"
     gem.authors = ["Matt Darby"]
