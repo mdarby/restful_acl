@@ -7,7 +7,7 @@ module RestfulAclController
 
   module ClassMethods
 
-    attr_accessor :object, :parent, :klass, :user
+    attr_accessor :restful_object, :restful_parent, :restful_klass, :restful_user
 
     def has_permission?
       return true if administrator?
@@ -17,11 +17,11 @@ module RestfulAclController
       begin
         # Let's let the Model decide what is acceptable
         permission_denied unless case params[:action]
-          when "index"          then @klass.is_indexable_by(@user, @parent)
-          when "new", "create"  then @klass.is_creatable_by(@user, @parent)
-          when "show"           then @object.is_readable_by(@user, @parent)
-          when "edit", "update" then @object.is_updatable_by(@user, @parent)
-          when "destroy"        then @object.is_deletable_by(@user, @parent)
+          when "index"          then @restful_klass.is_indexable_by(@restful_user, @restful_parent)
+          when "new", "create"  then @restful_klass.is_creatable_by(@restful_user, @restful_parent)
+          when "show"           then @restful_object.is_readable_by(@restful_user, @restful_parent)
+          when "edit", "update" then @restful_object.is_updatable_by(@restful_user, @restful_parent)
+          when "destroy"        then @restful_object.is_deletable_by(@restful_user, @restful_parent)
           else check_non_restful_route
         end
 
@@ -37,45 +37,45 @@ module RestfulAclController
     private
 
       def load_actors(id)
-        @user = current_user
+        @restful_user = current_user
 
         # Load the Model based on the controller name
-        @klass = self.controller_name.classify.demodulize.constantize
+        @restful_klass = self.controller_name.classify.demodulize.constantize
 
         if id.present?
           # Load the object and possible parent requested
-          @object = @klass.find(params[:id])
-          @parent = @object.get_mom if @klass.has_parent?
+          @restful_object = @restful_klass.find(params[:id])
+          @restful_parent = @restful_object.get_mom if @restful_klass.has_parent?
         else
           # No object was requested, so we need to go to the URI to figure out the parent
-          @parent = get_mom_from_request_uri(@klass) if @klass.has_parent?
+          @restful_parent = get_morestful_frorestful_request_uri(@restful_klass) if @restful_klass.has_parent?
 
-          if @klass.is_singleton?
-            @object = @parent.send(@klass.to_s.tableize.singularize.to_sym)
+          if @restful_klass.is_singleton?
+            @restful_object = @restful_parent.send(@restful_klass.to_s.tableize.singularize.to_sym)
           else
             # No object was requested (index, create actions)
-            @object = nil
+            @restful_object = nil
           end
         end
       end
 
       def check_non_restful_route
-        if @object
-          @object.is_readable_by(@user, @parent)
-        elsif @klass
-          @klass.is_indexable_by(@user, @parent)
+        if @restful_object
+          @restful_object.is_readable_by(@restful_user, @restful_parent)
+        elsif @restful_klass
+          @restful_klass.is_indexable_by(@restful_user, @restful_parent)
         else
           false # If all else fails, deny access
         end
       end
 
-      def get_method_from_error(error)
+      def get_method_frorestful_error(error)
         error.message.gsub('`', "'").split("'").at(1)
       end
 
       def raise_error(error)
-        method = get_method_from_error(error)
-        message = (is_class_method?(method)) ? "#{@klass}#self.#{method}" : "#{@klass}##{method}"
+        method = get_method_frorestful_error(error)
+        message = (is_class_method?(method)) ? "#{@restful_klass}#self.#{method}" : "#{@restful_klass}##{method}"
         raise NoMethodError, "[RESTful_ACL] #{message}(user, parent = nil) seems to be missing?"
       end
 
@@ -83,7 +83,7 @@ module RestfulAclController
         method =~ /[index|creat]able/
       end
 
-      def get_mom_from_request_uri(child_klass)
+      def get_morestful_frorestful_request_uri(child_klass)
         parent_klass = child_klass.mom.to_s
         bits         = request.request_uri.split('/')
         parent_id    = bits.at(bits.index(parent_klass.pluralize) + 1)
@@ -92,11 +92,11 @@ module RestfulAclController
       end
 
       def administrator?
-        @user.respond_to?("is_admin?") && @user.is_admin?
+        @restful_user.respond_to?("is_admin?") && @restful_user.is_admin?
       end
 
       def blame
-        @user.respond_to?(:login) ? @user.login : @user.username
+        @restful_user.respond_to?(:login) ? @restful_user.login : @restful_user.username
       end
 
       def permission_denied
