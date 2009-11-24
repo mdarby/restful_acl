@@ -1,6 +1,6 @@
-require 'restful_acl_controller'
-require 'restful_acl_helper'
-require 'restful_acl_model'
+require 'controller'
+require 'helper'
+require 'model'
 
 ActionController::Base.send :include, RestfulAclController
 ActionView::Base.send :include, RestfulAclHelper

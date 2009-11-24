@@ -48,11 +48,11 @@ module RestfulAclHelper
     end
 
     def parent_klass
-      klass.mom.to_s.classify.constantize
+      klass.parent.to_s.classify.constantize
     end
 
     def parent_id
-      params["#{klass.mom.to_s}_id"]
+      params["#{klass.parent.to_s}_id"]
     end
 
     def admin_enabled

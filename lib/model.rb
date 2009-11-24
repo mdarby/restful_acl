@@ -6,15 +6,21 @@ module RestfulAclModel
   end
 
   module ClassMethods
-    attr_accessor :mom
+    attr_accessor :mom, :singleton
 
-    def logical_parent(model)
-      self.mom = model
+    def logical_parent(model, *options)
+      @mom = model
+      @singleton = options.include?(:singleton)
+
       include RestfulAclModel::InstanceMethods
     end
 
     def has_parent?
-      !self.mom.nil?
+      @mom.present?
+    end
+
+    def is_singleton?
+      @singleton.present?
     end
 
   end
@@ -47,6 +53,7 @@ module RestfulAclModel
       def parent_id
         self.instance_eval("#{mom}_id")
       end
+
   end
 
 end
