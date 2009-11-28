@@ -1,7 +1,7 @@
 h1. Major changes in 3.0 release!
 
 * RESTful_ACL has been completely refactored for speed and usability.
-* A full Cucumber test suite has been written.
+* A full Cucumber test suite has been written (http://github.com/mdarby/restful_acl_app).
 * The view helpers @creatable@, @deletable@, @updatable@, @readable@ have been replaced by @allowed?@ (see below for more details).
 
 h2. RESTful_ACL
@@ -78,13 +78,11 @@ h4. View Helper
 
 RESTful_ACL provides you with a view helper named @allowed?@. Simply pass this method a block containing the URL you'd like to check permission on and it will do the rest.
 If the @current_user@ is allowed to access the requested link's action, the link will appear; otherwise no link will show.
-<pre>
-= allowed?{ link_to ‘Foo Index’, foos_path }
+<pre>= allowed?{ link_to ‘Foo Index’, foos_path }
 = allowed?{ link_to 'Edit Foo', edit_foo_path(@foo) }
 = allowed?{ link_to 'Create Foo', new_foo_path }
 = allowed?{ link_to 'View Foo', foo_path(@foo) }
-= allowed?{ link_to 'Delete Foo', foo_path(@foo), :method => :delete }
-</pre>
+= allowed?{ link_to 'Delete Foo', foo_path(@foo), :method => :delete }</pre>
 
 h3. Huh? Here's an example
 
@@ -131,7 +129,6 @@ I normally do something along these lines in RSpec:
     before do
       @project = mock_model(Project)
       @author  = mock_model(User, :projects => [@project])
-
       @issue = Issue.factory_girl(:issue, :author => @author, :project => @project)
     end
 
