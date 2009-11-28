@@ -1,14 +1,20 @@
+h1. Major changes in 3.0 release!
+
+* RESTful_ACL has been completely refactored for speed and usability.
+* A full Cucumber test suite has been written.
+* The view helpers @creatable@, @deletable@, @updatable@, @readable@ have been replaced by @allowed?@ (see below for more details).
+
 h2. RESTful_ACL
 
-A Ruby on Rails plugin that provides fine grained access control through the MVC stack to RESTful resources in a Ruby on Rails 2.0+ application. Authorization is as simple as true or false.
+RESTful_ACL is rails gem that provides a full stack, contextual access control to RESTful resources. Authorization is as simple as true or false.
 
 h3. What it does
 
-RESTful_ACL is a simple Access Control Layer for Ruby on Rails. It restricts access on a fine-grained level to any RESTful MVC stack. Every application is different and everyone likes to setup their User / Account / Role resources differently; this plugin will allow you to do your thing and keep that thing locked down.
+RESTful_ACL is a context-based permission engine. It provides full stack access control that is resource context aware. (If a parent is closed, a child is not editable, etc.)
 
 h3. Requirements
 
-RESTful_ACL requires the super amazing "RESTful_Authentication":https://github.com/technoweenie/restful-authentication plugin.
+RESTful_ACL requires the notion of a @current_user@. Most authenticaion plugins provide this (AuthLogic, RESTful_Authentication, etc.)
 
 h3. How to Install
 
@@ -18,11 +24,8 @@ Install the RESTful_ACL gem:
 Add the gem to your environment.rb file as thus:
 <pre>config.gem "restful_acl"</pre>
 
-RESTful_ACL requires two named routes: "error" and "denied". Add the following to your routes.rb file:
-<pre>
-  map.error 'error', :controller => 'some_controller', :action => 'error_action'
-  map.denied 'denied', :controller => 'some_controller', :action => 'denied_action'
-</pre>
+RESTful_ACL requires a named route named "denied". Add the following to your routes.rb file:
+<pre>map.denied 'denied', :controller => 'some_controller', :action => 'denied_action'</pre>
 
 h3. How to Use
 
@@ -71,15 +74,16 @@ RESTful_ACL 2.1+ supports singleton resources. Just pass @:singleton@ to the @lo
   end
 </pre>
 
-h4. View Helpers
+h4. View Helper
 
-There are five view helpers also included in RESTful_ACL: @#indexable@, @#creatable@, @#readable@, @#updatable@, and @#deletable@. These enable you to do nifty things like:
+RESTful_ACL provides you with a view helper named @allowed?@. Simply pass this method a block containing the URL you'd like to check permission on and it will do the rest.
+If the @current_user@ is allowed to access the requested link's action, the link will appear; otherwise no link will show.
 <pre>
-= link_to ‘Foo Index’, foos_path if indexable
-= link_to 'Edit Foo', edit_foo_path(@foo) if updatable(@foo)
-= link_to 'Create Foo', new_foo_path if creatable
-= link_to 'View Foo', foo_path(@foo) if readable(@foo)
-= link_to 'Delete Foo', foo_path(@foo) if deletable(@foo), :method => :destroy
+= allowed?{ link_to ‘Foo Index’, foos_path }
+= allowed?{ link_to 'Edit Foo', edit_foo_path(@foo) }
+= allowed?{ link_to 'Create Foo', new_foo_path }
+= allowed?{ link_to 'View Foo', foo_path(@foo) }
+= allowed?{ link_to 'Delete Foo', foo_path(@foo), :method => :delete }
 </pre>
 
 h3. Huh? Here's an example
