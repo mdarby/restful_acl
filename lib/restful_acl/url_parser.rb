@@ -20,6 +20,8 @@ class UrlParser
     {:name => "parent_index",               :controller_bit => 1, :object_id_bit => nil, :regex => /\/(\w+)$/}
   ]
 
+  URL        = /href="([\w|\/|-]+)"/
+  AJAXURL    = /url:'([\w|\/|-]+)'/
   NewURL     = /\/new$/
   EditURL    = /\/edit$/
   ObjectURL  = /\/(\d+)[\w|-]*$/
@@ -77,7 +79,11 @@ class UrlParser
 
     # Find the requested URL out of the text block received
     def requested_url
-      @link ||= /href="([\w|-|\d|\/]+)"/.match(@text)[1]
+      link = case @text
+        when URL then URL.match(@text)[1]
+        when AJAXURL then AJAXURL.match(@text)[1]
+        else raise RestfulAcl::UnrecognizedURLError, "'#{@text}' doesn't seem to contain a valid URL?"
+      end
     end
 
     # Deduce the requested action based on URL type
