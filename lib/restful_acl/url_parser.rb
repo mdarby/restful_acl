@@ -8,23 +8,23 @@
 class UrlParser
 
   TypesOfURLs = [
-    {:name => "parent_with_specific_child", :controller_bit => 3, :object_id_bit => 4,   :regex => /\/(\w+)\/(\d+)[\w|-]*\/(\w+)\/(\d+)[\w|-]*$/},
-    {:name => "parent_with_edit_child",     :controller_bit => 3, :object_id_bit => 4,   :regex => /\/(\w+)\/(\d+)[\w|-]*\/(\w+)\/(\d+)[\w|-]*\/edit$/},
-    {:name => "parent_with_child_index",    :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)[\w|-]*\/(\w+)$/},
-    {:name => "parent_with_new_child",      :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)[\w|-]*\/(\w+)\/new$/},
-    {:name => "edit_singleton_child",       :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)[\w|-]*\/(\w+)\/edit$/},
-    {:name => "new_singleton_child",        :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)[\w|-]*\/(\w+)\/new$/},
+    {:name => "parent_with_specific_child", :controller_bit => 3, :object_id_bit => 4,   :regex => /\/(\w+)\/(\d+)[\w-]*\/(\w+)\/(\d+)[\w-]*$/},
+    {:name => "parent_with_edit_child",     :controller_bit => 3, :object_id_bit => 4,   :regex => /\/(\w+)\/(\d+)[\w-]*\/(\w+)\/(\d+)[\w-]*\/edit$/},
+    {:name => "parent_with_child_index",    :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)[\w-]*\/(\w+)$/},
+    {:name => "parent_with_new_child",      :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)[\w-]*\/(\w+)\/new$/},
+    {:name => "edit_singleton_child",       :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)[\w-]*\/(\w+)\/edit$/},
+    {:name => "new_singleton_child",        :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)[\w-]*\/(\w+)\/new$/},
     {:name => "edit_parent",                :controller_bit => 1, :object_id_bit => 2,   :regex => /\/(\w+)\/edit$/},
     {:name => "new_parent",                 :controller_bit => 1, :object_id_bit => nil, :regex => /\/(\w+)\/new$/},
-    {:name => "specific_parent",            :controller_bit => 1, :object_id_bit => 2,   :regex => /\/(\w+)\/(\d+)[\w|-]*$/},
+    {:name => "specific_parent",            :controller_bit => 1, :object_id_bit => 2,   :regex => /\/(\w+)\/(\d+)[\w-]*$/},
     {:name => "parent_index",               :controller_bit => 1, :object_id_bit => nil, :regex => /\/(\w+)$/}
   ]
 
-  URL        = /href="([\w|\/|-]+)"/
-  AJAXURL    = /url:'([\w|\/|-]+)'/
+  URL        = /href="([\w\/-]+)"/
+  AJAXURL    = /url:'([\w\/-]+)'/
   NewURL     = /\/new$/
   EditURL    = /\/edit$/
-  ObjectURL  = /\/(\d+)[\w|-]*$/
+  ObjectURL  = /\/(\d+)[\w-]*$/
   DestroyURL = /.*m\.setAttribute\('value', 'delete'\).*/
 
   attr_accessor :text, :user, :url
