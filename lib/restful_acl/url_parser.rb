@@ -20,8 +20,8 @@ class UrlParser
     {:name => "parent_index",               :controller_bit => 1, :object_id_bit => nil, :regex => /\/(\w+)$/}
   ]
 
-  URL        = /href="([\w\/-]+)"/
-  AJAXURL    = /url:'([\w\/-]+)'/
+  URL        = /href="([\w\/-?$_.+!*'(),]+)"/
+  AJAXURL    = /url:'([\w\/-?$_.+!*'(),]+)'/
   NewURL     = /\/new$/
   EditURL    = /\/edit$/
   ObjectURL  = /\/(\d+)[\w-]*$/
