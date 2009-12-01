@@ -4,18 +4,9 @@ module RestfulAcl
     attr_accessor :object, :parent, :user, :controller_name, :uri, :action, :object_id
 
 
-    def initialize(options = {})
-      @object_id       = options[:object_id]
-      @user            = options[:user]
-      @uri             = options[:uri]
-      @action          = options[:action]
-      @controller_name = options[:controller_name]
-
-      if @object_id.present?
-        load_actors_from_id
-      else
-        load_actors_from_uri
-      end
+    def initialize(options)
+      options.each{|(k,v)| instance_variable_set "@#{k}", v}
+      (@object_id.present?) ? load_actors_from_id : load_actors_from_uri
     end
 
     def load_actors_from_id
