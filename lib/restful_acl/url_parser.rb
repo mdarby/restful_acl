@@ -69,7 +69,8 @@ class UrlParser
 
     # Call the dynamically created method with arguments from deduced hash
     def invoke_url_type_method(type)
-      send(type[:name], @url, type[:controller_bit], type[:object_id_bit], type[:regex])
+      data = OpenStruct.new(type)
+      send(data.name, @url, data.controller_bit, data.object_id_bit, data.regex)
     end
 
     # Deduce the requested URL's "type" based on the TypesOfURLs hash
