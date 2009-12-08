@@ -14,7 +14,7 @@ class UrlParser
     {:name => "parent_with_new_child",      :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)[\w-]*\/(\w+)\/new$/},
     {:name => "edit_singleton_child",       :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)[\w-]*\/(\w+)\/edit$/},
     {:name => "new_singleton_child",        :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)[\w-]*\/(\w+)\/new$/},
-    {:name => "edit_parent",                :controller_bit => 1, :object_id_bit => 2,   :regex => /\/(\w+)\/edit$/},
+    {:name => "edit_parent",                :controller_bit => 1, :object_id_bit => 2,   :regex => /\/(\w+)\/(\d+)[\w-]*\/edit$/},
     {:name => "new_parent",                 :controller_bit => 1, :object_id_bit => nil, :regex => /\/(\w+)\/new$/},
     {:name => "specific_parent",            :controller_bit => 1, :object_id_bit => 2,   :regex => /\/(\w+)\/(\d+)[\w-]*$/},
     {:name => "parent_index",               :controller_bit => 1, :object_id_bit => nil, :regex => /\/(\w+)$/}
