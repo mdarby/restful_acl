@@ -10,7 +10,7 @@ class UrlParser
   TypesOfURLs = [
     {:name => "parent_with_specific_child", :controller_bit => 3, :object_id_bit => 4,   :regex => /\/(\w+)\/(\d+)[\w-]*\/(\w+)\/(\d+)[\w-]*$/},
     {:name => "parent_with_edit_child",     :controller_bit => 3, :object_id_bit => 4,   :regex => /\/(\w+)\/(\d+)[\w-]*\/(\w+)\/(\d+)[\w-]*\/edit$/},
-    {:name => "parent_with_child_index",    :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)[\w-]*\/(\w+)$/},
+    {:name => "parent_with_child_index",    :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)\/\b(?!edit\b)(\w+)$/},
     {:name => "parent_with_new_child",      :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)[\w-]*\/(\w+)\/new$/},
     {:name => "edit_singleton_child",       :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)[\w-]*\/(\w+)\/edit$/},
     {:name => "new_singleton_child",        :controller_bit => 3, :object_id_bit => nil, :regex => /\/(\w+)\/(\d+)[\w-]*\/(\w+)\/new$/},
@@ -92,11 +92,14 @@ class UrlParser
     def requested_action(controller_name)
       return "destroy" if @text =~ DestroyURL
 
-      case @url
-        when EditURL then "edit"
-        when NewURL then "new"
-        when ObjectURL || controller_name.singular? then "show"
-        else "index"
+      if @url =~ EditURL
+        "edit"
+      elsif @url =~ NewURL
+        "new"
+      elsif @url =~ ObjectURL || controller_name.singular?
+        "show"
+      else
+        "index"
       end
     end
 

@@ -8,4 +8,8 @@ require 'activesupport'
 
 Spec::Runner.configure do |config|
   
+  def url(path)
+    "<a href=\"#{path}\">#{path}</a>"
+  end
+  
 end
