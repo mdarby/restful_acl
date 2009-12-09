@@ -58,6 +58,18 @@ describe UrlParser do
         UrlParser.new(@user){url("/parent_widgets/1")}.options_hash.should == expected
       end
 
+      it "should recognize destroy parent_widget URLs" do
+        expected = {
+          :controller_name => "parent_widgets",
+          :object_id       => "1",
+          :action          => "destroy",
+          :uri             => "/parent_widgets/1",
+          :user            => @user
+        }
+
+        UrlParser.new(@user){ destroy_url("/parent_widgets/1") }.options_hash.should == expected
+      end
+
     end
 
     describe "child resources" do
@@ -110,6 +122,18 @@ describe UrlParser do
         UrlParser.new(@user){url("/parent_widgets/1/child_widgets/1")}.options_hash.should == expected
       end
 
+      it "should recognize destroy child URLs" do
+        expected = {
+          :controller_name => "child_widgets",
+          :object_id       => "1",
+          :action          => "destroy",
+          :uri             => "/parent_widgets/1/child_widgets/1",
+          :user            => @user
+        }
+
+        UrlParser.new(@user){ destroy_url("/parent_widgets/1/child_widgets/1") }.options_hash.should == expected
+      end
+
     end
 
     describe "singleton resources" do
@@ -150,6 +174,32 @@ describe UrlParser do
         UrlParser.new(@user){url("/parent_widgets/1/singleton_widget")}.options_hash.should == expected
       end
 
+      it "should recognize destroy singleton_widget URLs" do
+        expected = {
+          :controller_name => "singleton_widget",
+          :object_id       => nil,
+          :action          => "destroy",
+          :uri             => "/parent_widgets/1/singleton_widget",
+          :user            => @user
+        }
+
+        UrlParser.new(@user){destroy_url("/parent_widgets/1/singleton_widget")}.options_hash.should == expected
+      end
+
+    end
+
+    describe "handling AJAX links" do
+      it "should give precidence to AJAX urls" do
+        expected = {
+          :controller_name => "parent_widgets",
+          :object_id       => "1",
+          :action          => "show",
+          :uri             => "/parent_widgets/1",
+          :user            => @user
+        }
+
+        UrlParser.new(@user){ajax_url("/parent_widgets/1")}.options_hash.should == expected
+      end
     end
 
   end

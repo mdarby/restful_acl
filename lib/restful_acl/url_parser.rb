@@ -81,8 +81,8 @@ class UrlParser
     # Find the requested URL out of the text block received
     def requested_url
       link = case @text
-        when URL then URL.match(@text)[1]
         when AJAXURL then AJAXURL.match(@text)[1]
+        when URL then URL.match(@text)[1]
         else raise RestfulAcl::UnrecognizedURLError, "'#{@text}' doesn't seem to contain a valid URL?"
       end
     end
