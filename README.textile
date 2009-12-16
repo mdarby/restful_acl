@@ -1,16 +1,7 @@
-h1. Major changes in 3.0 release!
-
-* RESTful_ACL has been completely refactored for speed and usability.
-* A full Cucumber test suite has been written (http://github.com/mdarby/restful_acl_app).
-* The view helpers @creatable@, @deletable@, @updatable@, @readable@ have been replaced by @allowed?@ (see below for more details).
-
 h2. RESTful_ACL
 
-RESTful_ACL is rails gem that provides a full stack, contextual access control to RESTful resources. Authorization is as simple as true or false.
-
-h3. What it does
-
-RESTful_ACL is a context-based permission engine. It provides full stack access control that is resource context aware. (If a parent is closed, a child is not editable, etc.)
+RESTful_ACL is a full-stack context-based permission engine. It provides access control that is contextually aware. (If a parent is closed, a child is not editable, etc.)
+Permission is as simple as true or false.
 
 h3. Requirements
 
@@ -35,11 +26,10 @@ Add @before_filter :has_permission?@ into any controller that you'd like to rest
 
 h4. Models
 
-Define a parent resource (if one exists) by using the @logical_parent@ method, and define the following five methods in the model of every resource you'd like to restrict access to. The five methods can contain anything you'd like so long as they return a boolean true or false. This allows you to define your User's roles any way you wish.
+Define the following five methods in the model of every resource you'd like to restrict access to. The five methods can contain anything you'd like so long as they return a boolean true or false. This allows you to define your User's roles any way you wish.
 
 <pre>
   class Issue < ActiveRecord::Base
-    logical_parent :some_model_name
 
     # This method checks permissions for the :index action
     def self.is_indexable_by(user, parent = nil)
@@ -60,12 +50,24 @@ Define a parent resource (if one exists) by using the @logical_parent@ method, a
     # This method checks permissions for the :destroy action
     def is_deletable_by(user, parent = nil)
     end
+
   end
 </pre>
 
-h4. Singleton Resources
+h4. Parent / Child resources
 
-RESTful_ACL 2.1+ supports singleton resources. Just pass @:singleton@ to the @logical_parent@
+Sometimes actions should only be allowable on a resource if some "parent" resource allows them. Contextual permissions FTW.
+
+Link your "child" resource with its "parent" resource by using the @logical_parent@ macro and you'll have access to the "parent" resource in your child's RESTful_ACL methods.
+
+<pre>
+  class Child < ActiveRecord::Base
+    logical_parent :parent
+    ...
+  end
+</pre>
+
+If the "child" resource is a singleton, just pass @:singleton@ to the @logical_parent@ macro:
 
 <pre>
   class Car < ActiveRecord::Base
@@ -76,13 +78,17 @@ RESTful_ACL 2.1+ supports singleton resources. Just pass @:singleton@ to the @lo
 
 h4. View Helper
 
-RESTful_ACL provides you with a view helper named @allowed?@. Simply pass this method a block containing the URL you'd like to check permission on and it will do the rest.
-If the @current_user@ is allowed to access the requested link's action, the link will appear; otherwise no link will show.
-<pre>= allowed?{ link_to ‘Foo Index’, foos_path }
-= allowed?{ link_to 'Edit Foo', edit_foo_path(@foo) }
-= allowed?{ link_to 'Create Foo', new_foo_path }
-= allowed?{ link_to 'View Foo', foo_path(@foo) }
-= allowed?{ link_to 'Delete Foo', foo_path(@foo), :method => :delete }</pre>
+RESTful_ACL adds a view helper called @allowed?@. Simply pass this method a block containing the URL you'd like to check permission on and it will do the rest.
+The link will appear if the @current_user@ is allowed to access the passed-in link's action.
+
+<pre>
+  = allowed?{ link_to ‘Foo Index’, foos_path }
+  = allowed?{ link_to 'Edit Foo', edit_foo_path(@foo) }
+  = allowed?{ link_to 'Create Foo', new_foo_path }
+  = allowed?{ link_to 'View Foo', foo_path(@foo) }
+  = allowed?{ link_to 'Delete Foo', foo_path(@foo), :method => :delete }
+</pre>
+
 
 h3. Huh? Here's an example
 
@@ -117,6 +123,8 @@ Let's say that you have two resources: Project and Issue. A Project has many Iss
   end
 </pre>
 
+If you still have questions, please checkout the "test app":http://github.com/mdarby/restful_acl_app
+
 h3. Admins RULE!
 
 RESTful_ACL grants global access to all actions to site administrators. To enable this, make sure that your User model defines an @is_admin?@ method *and/or* an @is_admin@ attribute. If the @current_user.is_admin?@ returns true, access will be granted automatically.
@@ -127,9 +135,9 @@ I normally do something along these lines in RSpec:
 <pre>
   describe "Issue" do
     before do
-      @project = mock_model(Project)
-      @author  = mock_model(User, :projects => [@project])
-      @issue = Issue.factory_girl(:issue, :author => @author, :project => @project)
+      @project = mock_model(:project)
+      @author  = mock_model(:user, :projects => [@project])
+      @issue   = Factory(:issue, :author => @author, :project => @project)
     end
 
     it "should be modifiable by the author when the Project is active" do
@@ -150,10 +158,6 @@ I normally do something along these lines in RSpec:
     end
   end
 </pre>
-
-h3. Help
-
-Add a ticket to "RESTful_ACL's Lighthouse Account":http://mdarby.lighthouseapp.com/projects/28698-restful_acl/overview
 
 h3. About the Author
 
