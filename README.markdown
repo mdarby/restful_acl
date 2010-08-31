@@ -2,6 +2,10 @@ RESTful_ACL
 ===========
 RESTful_ACL is a full-stack context-based permission engine. It provides access control that is contextually aware. (If a parent is closed, a child is not editable, etc.) Permission is as simple as true or false.
 
+Rails 3
+-------
+RESTful_ACL 3.1 and on are Rails 3 ready.
+
 Requirements
 ------------
 RESTful_ACL requires the notion of a `current_user`. Most authenticaion plugins provide this (AuthLogic, RESTful_Authentication, etc.)
@@ -11,8 +15,8 @@ How to Install
 Install the RESTful_ACL gem:
 <pre><code>sudo gem install restful_acl -s http://gemcutter.org</code></pre>
 
-Add the gem to your environment.rb file as thus:
-<pre><code>config.gem "restful_acl"</code></pre>
+Add the gem to your Gemfile file as thus:
+<pre><code>gem "restful_acl"</code></pre>
 
 RESTful_ACL requires a named route named "denied". Add the following to your routes.rb file:
 <pre><code>map.denied 'denied', :controller => 'some_controller', :action => 'denied_action'</code></pre>
