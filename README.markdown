@@ -4,7 +4,7 @@ RESTful_ACL is a full-stack context-based permission engine. It provides access 
 
 Rails 3
 -------
-RESTful_ACL 3.1 and on are Rails 3 ready.
+RESTful_ACL 3.1 and on are Rails 3 ready. Rails 2 will no longer be supported. Sorries.
 
 Requirements
 ------------
