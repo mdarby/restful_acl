@@ -14,7 +14,6 @@ module RestfulAcl
 
   class Railtie
     def self.insert
-      puts ">>>>>>>>>>"
       ActiveRecord::Base.send(:include, RestfulAcl::Model)
       ActionController::Base.send(:include, RestfulAcl::Controller)
       ActionView::Base.send(:include, RestfulAcl::Helper)
