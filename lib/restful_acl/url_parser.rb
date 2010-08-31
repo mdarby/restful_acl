@@ -25,7 +25,7 @@ class UrlParser
   NewURL     = /\/new$/
   EditURL    = /\/edit$/
   ObjectURL  = /\/(\d+)[\w-]*$/
-  DestroyURL = /.*m\.setAttribute\('value', 'delete'\).*/
+  DestroyURL = /data-method="delete"/
 
   attr_accessor :text, :user, :url
 

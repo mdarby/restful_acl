@@ -12,7 +12,7 @@ module RestfulAcl
         options = {
           :controller_name => self.controller_name,
           :object_id       => params[:id],
-          :uri             => request.request_uri,
+          :uri             => request.fullpath,
           :user            => current_user,
           :action          => params[:action]
         }
@@ -24,7 +24,7 @@ module RestfulAcl
       private
 
         def permission_denied
-          logger.info("[RESTful_ACL] Permission denied to %s at %s for %s" % [blame, Time.now, request.request_uri])
+          logger.info("[RESTful_ACL] Permission denied to %s at %s for %s" % [blame, Time.now, request.fullpath])
           redirect_to denied_url
         end
 
