@@ -21,7 +21,6 @@ class UrlParser
   ]
 
   URL        = /href="([\w\/-?$_.+!*'(),]+)"/
-  AJAXURL    = /url:'([\w\/-?$_.+!*'(),]+)'/
   NewURL     = /\/new$/
   EditURL    = /\/edit$/
   ObjectURL  = /\/(\d+)[\w-]*$/
@@ -80,10 +79,10 @@ class UrlParser
 
     # Find the requested URL out of the text block received
     def requested_url
-      link = case @text
-        when AJAXURL then AJAXURL.match(@text)[1]
-        when URL then URL.match(@text)[1]
-        else raise RestfulAcl::UnrecognizedURLError, "'#{@text}' doesn't seem to contain a valid URL?"
+      if link = URL.match(@text)
+        link[1]
+      else
+        raise RestfulAcl::UnrecognizedURLError, "'#{@text}' doesn't seem to contain a valid URL?"
       end
     end
 
