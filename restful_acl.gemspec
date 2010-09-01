@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{restful_acl}
-  s.version = "3.1.2"
+  s.version = "3.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matt Darby"]
-  s.date = %q{2010-08-31}
+  s.date = %q{2010-09-01}
   s.description = %q{A Ruby on Rails plugin that provides fine grained access control to RESTful resources.}
   s.email = %q{matt@matt-darby.com}
   s.extra_rdoc_files = [
