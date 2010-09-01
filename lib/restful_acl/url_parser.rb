@@ -20,7 +20,7 @@ class UrlParser
     {:name => "parent_index",               :controller_bit => 1, :object_id_bit => nil, :regex => /\/(\w+)$/}
   ]
 
-  URL        = /href="([\w\/-?$_.+!*'(),]+)"/
+  URL        = /href="(.*)"/
   NewURL     = /\/new$/
   EditURL    = /\/edit$/
   ObjectURL  = /\/(\d+)[\w-]*$/
