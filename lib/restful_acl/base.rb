@@ -28,7 +28,7 @@ module RestfulAcl
       bits         = @uri.split('/')
       parent_id    = bits.at(bits.index(parent_klass.pluralize) + 1)
 
-      parent_klass.classify.constantize.find(parent_id)
+      parent_klass.classify.constantize.find(parent_id.to_i)
     end
 
     def object_class
