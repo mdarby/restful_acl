@@ -7,8 +7,8 @@ begin
     gem.name = "restful_acl"
     gem.summary = "A Ruby on Rails plugin that provides fine grained access control to RESTful resources."
     gem.description = "A Ruby on Rails plugin that provides fine grained access control to RESTful resources."
-    gem.email = "matt@matt-darby.com"
-    gem.homepage = "http://github.com/mdarby/restful_acl"
+    gem.email = "matt@protectedmethod.com"
+    gem.homepage = "http://github.com/protectedmethod/restful_acl"
     gem.authors = ["Matt Darby"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
