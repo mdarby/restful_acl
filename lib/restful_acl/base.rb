@@ -10,7 +10,7 @@ module RestfulAcl
     end
 
     def load_actors_from_id
-      @object = object_class.find(@object_id)
+      @object = object_class.find(@object_id.to_i)
       @parent = @object.get_mom if object_class.has_parent?
     end
 
