@@ -26,7 +26,13 @@ module RestfulAcl
     def load_parent_from_uri
       parent_klass = object_class.mom.to_s
       bits         = @uri.split('/')
-      parent_id    = bits.at(bits.index(parent_klass.pluralize) + 1)
+      parent_id    = bits.at(bits.index(parent_klass.pluralize).to_i + 1)
+
+      if parent_id.to_i == 0
+        look_for = /#{parent_klass}_id=(\d+)/
+        @uri.match(look_for)
+        parent_id = $1
+      end
 
       parent_klass.classify.constantize.find(parent_id.to_i)
     end
